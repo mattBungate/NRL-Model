@@ -6,8 +6,3 @@ For the data collection, I have used a webscraper on the NRL.com website to gath
 
 # ML application
 I have taken inspiration from language models by taking a similar approach and using a similar structure. Instead of previous characters being used as the context to predict the next one, I will be using the previous games to predict the outcome of the next one. 
-
-## This is a test
-Hello??
-
-

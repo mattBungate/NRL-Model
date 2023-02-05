@@ -10,7 +10,6 @@ from sqlalchemy import true
 
 df = pd.read_csv('nrlOddsSheet.csv')
 
-
 array = df.to_numpy()
 
 all_odds = []
@@ -33,6 +32,8 @@ prevMonth = None
 
 lastYearOdds = []
 
+
+
 rightOrder = []
 for i in range(len(array)):
     rightOrder.append(array[-i])
@@ -49,11 +50,6 @@ for game in rightOrder:
 
     day = int(date[0])
     year = int(date[2])
-    
-    #if year == 22:
-    #    print(game[0])
-    
-    #continue
 
     game_info = []
     game_info.append(game[0])
@@ -65,6 +61,11 @@ for game in rightOrder:
     game_info.append(float(game[10]))
     game_info.append(float(game[11]))
     
+    if math.isnan(float(game[24])) == False:
+        game_info.append(float(game[24]))
+    if math.isnan(float(game[40])) == False:
+        game_info.append(float(game[40]))
+
     if year != prevYear:
         oddsByRound.append(roundOdds)
         oddsByYear.append(oddsByRound)
@@ -93,48 +94,12 @@ for game in rightOrder:
             roundOdds.append(game_info)
             prevDay = day
   
-    """
-    game_info = []
-    game_info.append(game[2])
-    game_info.append(game[3])
-    game_info.append(game[5])
-    game_info.append(game[6])
-    game_info.append(game[9])
-    game_info.append(game[10])
-    game_info.append(game[11])
-    all_odds.append(game_info)
-    total_games += 1
-
-    if type(game[40]) == str:
-        game_info_copy_total = copy.deepcopy(game_info)
-        game_info_copy_total.append(game[40])
-        game_info_copy_total.append(game[44])
-        game_info_copy_total.append(game[48])
-        total_odds.append(game_info_copy_total)
-        games_with_total += 1
-
-
-    if type(game[21]) == str:
-        games_with_line += 1
-        game_info_copy = copy.deepcopy(game_info_copy_total)
-        game_info_copy.append(game[24])
-        game_info_copy.append(game[32])
-        game_info_copy.append(game[28])
-        game_info_copy.append(game[36])
-        line_odds.append(game_info_copy)
-"""
 oddsByRound.append(roundOdds)
 oddsByYear.append(oddsByRound)
 
-#print(f"Number years: {len(oddsByYear)}")
-#print(f"Number Rounds in last year: {len(oddsByYear[-1])}")
-#print(f"Number games in first round of last year: {len(oddsByYear[-1][0])}")
+print(len(oddsByYear))
+xxxx
 
-
-#for i, round in enumerate(oddsByYear[-1]):
-#    print(f"Round {i+1}: {round}")
-
-#print(oddsByYear[0])
 profits = []
 yearly_bets_placed = []
 for year in oddsByYear:
