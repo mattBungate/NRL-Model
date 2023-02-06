@@ -6,7 +6,6 @@ import math
 import copy
 import matplotlib.pyplot as plt
 
-from sqlalchemy import true
 
 df = pd.read_csv('nrlOddsSheet.csv')
 
