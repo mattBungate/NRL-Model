@@ -1,3 +1,4 @@
+import csv
 
 headings = ['Year',
             'Round',
@@ -100,5 +101,19 @@ headings = ['Year',
             "Home HIA's",
             "Away HIA's"]
 
-#for i, val in enumerate(headings):
-#    print(i, val)
+def get_team_data(location, game):
+    home_indexes = [4,6,8,9,12,13,16,17,20,21,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96]
+    away_indexes = []
+    for n in range(4, 98):
+        if n not in home_indexes:
+            away_indexes.append(n)
+    indexes = home_indexes if location == 'home' else away_indexes
+    team_data = []
+    for index in indexes:
+        team_data.append(index)
+        if location == 'home':
+            team_data.append(1)
+        else:
+            team_data.append(0)
+    return team_data
+

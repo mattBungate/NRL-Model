@@ -14,6 +14,7 @@ driver = webdriver.Chrome(service=ser, options=op)
 
 dataFile = open('gameData.csv', 'w')
 writer = csv.writer(dataFile)
+writer.writerow(HEAD.headings)
 
 def timeDealer(time):
     time_split = time.split(':')
@@ -46,7 +47,7 @@ def parseText(gameInfoRaw):
             gameInfo.append(summarySection[line + 1])
         if content == 'CONVERSIONS':
             gameInfo.append(summarySection[line - 1][0])
-            if len(summarySection[line+1]) > 1:
+            if len(summarySection[line - 1]) > 1:
                 gameInfo.append(summarySection[line - 1][2])
             gameInfo.append(summarySection[line + 1][0])
             if len(summarySection[line+1]) > 1:
@@ -54,7 +55,7 @@ def parseText(gameInfoRaw):
         
         if content == "PENALTY GOALS":
             gameInfo.append(summarySection[line - 1][0])
-            if len(summarySection[line- 1]) > 1:
+            if len(summarySection[line - 1]) > 1:
                 gameInfo.append(summarySection[line - 1][2])
             else:
                 gameInfo.append(0)
@@ -224,7 +225,6 @@ def parseText(gameInfoRaw):
                 gameInfo.append(0)
             gameInfo.append(statsSection[line + 1].strip())
             gameInfo.append(statsSection[line + 3].strip())
-            print("Found 40/20")
             continue
         if 'Bombs' in content:
             while len(gameInfo) < 70:
@@ -242,7 +242,8 @@ def parseText(gameInfoRaw):
                 gameInfo.append(0)
             for i, char in enumerate(content):
                 if char == '%':
-                    gameInfo.append(content[i-2:i])
+                    if content[i-2] != 'e':
+                        gameInfo.append(content[i-4:i])
         if 'Tackles Made' in content:
             while len(gameInfo) < 76:
                 gameInfo.append(0)
@@ -259,7 +260,6 @@ def parseText(gameInfoRaw):
                 gameInfo.append(0)
             gameInfo.append(statsSection[line + 1].strip())
             gameInfo.append(statsSection[line + 3].strip())
-            print("In intercepts")
             continue
         if 'Ineffective Tackles' in content:
             while len(gameInfo) < 82:
@@ -306,7 +306,6 @@ def parseText(gameInfoRaw):
                     gameInfo.append(0)
             gameInfo.append(statsSection[line + 1].strip())
             gameInfo.append(statsSection[line + 3].strip())
-            print("HIA found")
 
     while len(gameInfo) < 98:
         gameInfo.append(0)
@@ -331,7 +330,7 @@ for year in years:
         roundRawInfo = []
         site = f'https://www.nrl.com/draw/?competition=111&round={round}&season={year}'
         driver.get(site)
-        time.sleep(3)  
+         
 
         if round == 1:
             num_rounds = len(driver.find_elements(By.CLASS_NAME, 'filter-dropdown-item--round'))
@@ -347,7 +346,7 @@ for year in years:
 
             link = driver.find_element(By.XPATH, f'//*[@id="draw-content"]/section[{i+1}]/ul/li/div/div[1]/a')
             link.click()
-            time.sleep(3)
+            time.sleep(2)
             gameInfoRaw.append(driver.find_element(By.XPATH, '//*[@id="vue-match-centre"]/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[2]/div').text)
             gameInfoRaw.append(driver.find_element(By.XPATH, '//*[@id="vue-match-centre"]/div/div[1]/div/div/div[3]').text)
             htmlText = driver.page_source 
@@ -361,7 +360,7 @@ for year in years:
             writer.writerow(gameInfoProcessed)
             
             driver.back()
-            time.sleep(3)
+            time.sleep(2)
         round += 1
         yearRawInfo.append(roundRawInfo)
     allRawInfo.append(yearRawInfo)
